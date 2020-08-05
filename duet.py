@@ -142,8 +142,11 @@ def create_game(mode):
 # show_matrix(c)
 # show_matrix(mirror_matrix(c))
 
-# De momento, el default a imprimir son 10 por cada cara 
-for i in range(10):
+# START
+# De momento, el default a imprimir son 10 por cada cara
+num_to_print = 10
+
+for i in range(num_to_print):
     ima, imb = create_game('mirror')
     if not os.path.exists('./A/'):
         os.makedirs('./A/')
