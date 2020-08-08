@@ -2,7 +2,7 @@
  Python Script to print the key cards for the boardgame Codenames Duet. Default: 10 copies for each side. 
  
  
-## HOW TO USE
+## How to use
  Run the script, and two folders will be generated: A and B.
  To play a game, each team has to get the file with the same number as the other team.
  (Example, A uses 8A and B uses 8B)
