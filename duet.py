@@ -3,11 +3,7 @@ import os
 from PIL import Image, ImageDraw
 
 
-def show_matrix(arr):
-    for row in arr:
-        print(row)
-
-
+# Funcion para crear una matriz de 5x5 y llenarla de W (Neutrales / Whites)
 def create_matrix():
     cols = 5
     rows = 5
@@ -15,6 +11,13 @@ def create_matrix():
     return arr
 
 
+# Funcion auxiliar para representar una matriz
+def show_matrix(arr):
+    for row in arr:
+        print(row)
+
+
+# Funcion que rellena una matriz dada con un numero 'ran' de asesinos elegidos al azar
 def fill_assassins(arr, ran):
     for i in range(ran):
         col = random.randint(0, 4)
@@ -25,6 +28,17 @@ def fill_assassins(arr, ran):
         arr[row][col] = 'A'
 
 
+# Recupera un array de asesinos dada la matriz
+def get_assassins(arr):
+    result = []
+    for i in range(len(arr)):
+        for j in range(len(arr[0])):
+            if arr[i][j] == 'A':
+                result.append((i, j))
+    return result
+
+
+# Funcion que rellena una matriz dada con un numero 'ran' de espias elegidos al azar
 def fill_spies(arr, ran):
     for i in range(ran):
         col = random.randint(0, 4)
@@ -35,28 +49,7 @@ def fill_spies(arr, ran):
         arr[row][col] = 'G'
 
 
-def fill_matrix(arr):
-    fill_assassins(arr, 3)
-    fill_spies(arr, 9)
-
-
-def mirror_matrix(arr):
-    b = create_matrix()
-    for i in range(len(arr)):
-        for j in range(len(arr[0])):
-            b[abs(i-4)][abs(j-4)] = arr[i][j]
-    return b
-
-
-def get_assassins(arr):
-    result = []
-    for i in range(len(arr)):
-        for j in range(len(arr[0])):
-            if arr[i][j] == 'A':
-                result.append((i, j))
-    return result
-
-
+# Recupera un array de espias dada la matriz
 def get_spies(arr):
     result = []
     for i in range(len(arr)):
@@ -66,6 +59,22 @@ def get_spies(arr):
     return result
 
 
+# Rellena la matriz con 3 asesinos y 9
+def fill_matrix(arr):
+    fill_assassins(arr, 3)
+    fill_spies(arr, 9)
+
+
+# Dada una matriz, crea su version en "espejo"
+def mirror_matrix(arr):
+    b = create_matrix()
+    for i in range(len(arr)):
+        for j in range(len(arr[0])):
+            b[abs(i-4)][abs(j-4)] = arr[i][j]
+    return b
+
+
+# Crea la tarjeta compañera del array dado
 def couple(arr):
     mat = create_matrix()
     aux = []
@@ -95,6 +104,7 @@ def couple(arr):
     return mat
 
 
+# Crea la imagen dada la matriz, distinguiendo entre espias 'G', asesinos 'A' y neutrales 'W'
 def create_image(matrix):
     img = Image.new('RGB', (700, 700), color=(152, 106, 70))
     d = ImageDraw.Draw(img)
@@ -111,10 +121,10 @@ def create_image(matrix):
                 ImageDraw.floodfill(img, (i * 100 + 150, j * 100 + 150), value=(16, 1, 6))
             else:
                 ImageDraw.floodfill(img, (i * 100 + 150, j * 100 + 150), value=(239, 224, 167))
-
     return img
 
 
+# Devuelve las dos tarjetas dado el modo de juego
 def create_game(mode):
     a = create_matrix()
     fill_matrix(a)
@@ -127,6 +137,21 @@ def create_game(mode):
     return im, im1
 
 
+# Crea las carpetas y los archivos para cada para de tarjetas, un numero de veces definido en number_of_prints
+def start(number_of_prints):
+    for i in range(number_of_prints):
+        ima, imb = create_game('mirror')
+        if not os.path.exists('./A/'):
+            os.makedirs('./A/')
+        if not os.path.exists('./B/'):
+            os.makedirs('./B/')
+        ima.save('./A/' + str(i) + 'A.png')
+        imb.save('./B/' + str(i) + 'B.png')
+        print('Acabadas keys numero: ' + str(i))
+
+
+# ---------------------------------------------
+# PRUEBAS
 # a = create_matrix()
 # fill_matrix(a)
 # show_matrix(a)
@@ -141,17 +166,10 @@ def create_game(mode):
 # c = couple(a)
 # show_matrix(c)
 # show_matrix(mirror_matrix(c))
+# ---------------------------------------------
+
 
 # START
 # De momento, el default a imprimir son 10 por cada cara
 num_to_print = 10
-
-for i in range(num_to_print):
-    ima, imb = create_game('mirror')
-    if not os.path.exists('./A/'):
-        os.makedirs('./A/')
-    if not os.path.exists('./B/'):
-        os.makedirs('./B/')
-    ima.save('./A/' + str(i) + 'A.png')
-    imb.save('./B/' + str(i) + 'B.png')
-    print('Acabadas keys numero: ' + str(i))
+start(num_to_print)
